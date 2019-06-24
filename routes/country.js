@@ -11,9 +11,8 @@
 
 const path = require('path');
 const router = require('express').Router();
-var fetch = require('node-fetch');
-var _ = require('underscore');
-var main = require('./main');
+const main = require('./main');
+const eventful = require('../models/eventful.api');
 
 let countries = {};
 main.promise.then(() => {
@@ -26,39 +25,25 @@ router.get('/country', (req, res) => {
         res.status(400);
         next(err);
     }
-
-    let events = new Array;
-    let fetches = [];
-    let url = '';
-    for (let i = 1; i <= 2; i++) {
-        if (countries[req.query.index].alpha2Code == "US") {
-            url = `https://api.eventful.com/json/events/search?&app_key=${process.env.EVENTFUL_APPKEY}&location="United States"&page_number=${i}`;
-        } else {
-            url = `https://api.eventful.com/json/events/search?&app_key=${process.env.EVENTFUL_APPKEY}&location="${countries[req.query.index].name}"&page_number=${i}`;
-        }
-        fetches.push(fetch(url)
-            .then(res => res.json())
-            .then(body => {
-                body.events === null ? console.log(`events are null for page: ${i}!`) : events.push(body.events.event);
-            })
-            .catch((error) => {
-                console.log('error loading the data for: ' + error);
-                res.status(500).end();
-            }));
-    }
-    Promise.all(fetches).then(() => {
-        res.render(path.join(__dirname, '../client/html/country'), {
-            name: countries[req.query.index].name,
-            capital: countries[req.query.index].capital,
-            flag: countries[req.query.index].flag,
-            alphaCode: countries[req.query.index].alpha3Code + ', ' + countries[req.query.index].alpha2Code,
-            population: countries[req.query.index].population,
-            languages: countries[req.query.index].languages,
-            region: countries[req.query.index].region,
-            subregion: countries[req.query.index].subregion,
-            events: _.flatten(events)
-        });
-    })
+    
+    eventful.countryEvents(req.query.index, countries)
+        .then((data) => {
+            res.render(path.join(__dirname, '../client/html/country'), {
+                name: countries[req.query.index].name,
+                capital: countries[req.query.index].capital,
+                flag: countries[req.query.index].flag,
+                alphaCode: countries[req.query.index].alpha3Code + ', ' + countries[req.query.index].alpha2Code,
+                population: countries[req.query.index].population,
+                languages: countries[req.query.index].languages,
+                region: countries[req.query.index].region,
+                subregion: countries[req.query.index].subregion,
+                events: data.events.event
+            });
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).end()
+        })
 });
 
 module.exports = router;

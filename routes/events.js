@@ -5,16 +5,16 @@
 
 const path = require('path');
 const router = require('express').Router();
-var fetch = require('node-fetch');
+const eventbrite = require('../models/eventbrite.api');
 
 router.get('/events', (req, res) => {
-    url = `https://www.eventbriteapi.com/v3/events/search/?q=${req.query.query}&token=${process.env.EVENTBRITE_API_TOKEN}&expand=venue`;
-    fetch(url)
-        .then(res => res.json())
-        .then(body => {
+
+
+    eventbrite.events(req.query.query)
+        .then((data) => {
             res.render(path.join(__dirname, '../client/html/events'), {
                 query: req.query.query,
-                events: body.events
+                events: data.events
             });
         })
         .catch((error) => {
@@ -22,6 +22,7 @@ router.get('/events', (req, res) => {
             Console.log(error);
             res.status(500).end();
         });
+
 });
 
 module.exports = router;
