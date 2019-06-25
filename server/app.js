@@ -5,10 +5,10 @@
 */
 
 require('dotenv').config();
-const morgan = require('morgan');
 const path = require('path');
 const express = require('express');
 const app = express();
+const countries = require('../models/rest-countries.api');
 
 // app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, '../client/')));
@@ -27,7 +27,8 @@ app.set('view engine', 'pug');
     All the routes are seperated to keep the project organized.
 */
 
-app.use(require('../routes/main').router);
+app.use(require('../routes/api/countries'));
+app.use(require('../routes/main'));
 app.use(require('../routes/events'));
 app.use(require('../routes/country'));
 app.use(require('../routes/details'));
@@ -59,6 +60,8 @@ app.use((err, req, res, next) => {
 
 const main = async () => {
     await app.listen(port);
+    await countries.initCountriesAPI();
+    await console.log('countries api is ready!');
     return console.debug(`🚀  Server listening on http://${localhost}:${port}`);
 }
 
