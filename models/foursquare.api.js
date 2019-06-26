@@ -9,32 +9,29 @@
 
 const fetch = require('node-fetch');
 
-module.exports.getVenues = (lat, long) => {
+module.exports.getVenues = async (lat, long) => {
 
     let venues = {};
-    let fetches = [];
-    fetches.push(fetch(`https://api.foursquare.com/v2/venues/search?query=restaurant,cafe&ll=${lat},${long}&client_id=${process.env.FOURSQUARE_CLIENT_ID}&client_secret=${process.env.FOURSQUARE_CLIENT_SECRET}&v=20190101&limit=40&radius=5000`)
+    let url = `https://api.foursquare.com/v2/venues/search?query=restaurant,cafe&ll=${lat},${long}&client_id=${process.env.FOURSQUARE_CLIENT_ID}&client_secret=${process.env.FOURSQUARE_CLIENT_SECRET}&v=20190101&limit=40&radius=5000`
+
+    await fetch(url)
         .then(res => res.json())
         .then(body => {
             for (let n = 0; n < body.response.venues.length; n++) {
-                if (body.response.venues[n].name !== null && body.response.venues[n].location.distance !== null &&
-                    body.response.venues[n].location.formattedAddress !== null && body.response.venues[n].location.lat !== null &&
-                    body.response.venues[n].location.lng !== null && body.response.venues[n].categories[0].name !== null) {
-                    venues[n] = {
-                        name: body.response.venues[n].name,
-                        distance: body.response.venues[n].location.distance,
-                        address: body.response.venues[n].location.formattedAddress,
-                        latitude: body.response.venues[n].location.lat,
-                        longitude: body.response.venues[n].location.lng,
-                        category: body.response.venues[n].categories[0].name,
-                    }
+                venues[n] = {
+                    name: body.response.venues[n].name,
+                    distance: body.response.venues[n].location.distance,
+                    address: body.response.venues[n].location.formattedAddress,
+                    latitude: body.response.venues[n].location.lat,
+                    longitude: body.response.venues[n].location.lng,
+                    category: body.response.venues[n].categories[0].name,
                 }
             }
         })
         .catch((error) => {
             console.log(`error loading some of the venues' data` + error);
-        }));
+        });
 
-    return Promise.all(fetches).then(() => {return venues});
+    return venues;
 }
 
