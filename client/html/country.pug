@@ -1,117 +1,120 @@
 doctype html
 html
-	head
-		link(rel="shortcut icon" href="#")
-		link(rel='stylesheet', type='text/css', href='../css/country.css')
-		script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js')
-		script(src='https://code.jquery.com/ui/1.12.1/jquery-ui.js')
-		link(rel='stylesheet', href='https://unpkg.com/leaflet@1.3.4/dist/leaflet.css')
-		script(src='https://unpkg.com/leaflet@1.3.4/dist/leaflet.js')
-		meta(charset='utf-8')
-		meta(name='viewport', content='width=device-width, initial-scale=5.0')
-		title#countryNameTitle #{' '+name}
-	
-		style(type='text/css').
-			html {
-				background: url(#{flag}) no-repeat center center fixed;
-				background-size: cover;
-				-webkit-background-size: cover;
-				-moz-background-size: cover;
-				-o-background-size: cover;
-			}
-	body
-		h1#countryName #{' '+name}
-		#main-container
-			#flag-container
-				img#flag(src=flag)
-			#info-container
-				p
-					| Capital:
-					span#countryCapital #{' '+capital}
-				p
-					| Dialing Code:
-					span#countryAlphaCode #{' '+alphaCode}
-				p
-					| Population:
-					span#countryPopulation #{' '+population.toLocaleString()}
-				p
-					| Languages:
-					span#countryLanguages 
-						each language in languages
-							=language.name+', '
-				p
-					| Region:
-					span#countryRegion #{' '+region}
-				p
-					| Subregion:
-					span#countrySubregion #{' '+subregion}
-		// events
-		- eventsOnMap = new Array;
-		.spaces1
-		#tableWrapper(style='min-width: 1280px; margin: 0 auto;')
-		- if (events && events.length > 0)
-			h1#upcomingEvents(style='text-align:left; margin: 65px;') #{'Upcoming Events: ' + events.length}
-			table#headerTable
-				tr
-					th(style='width:50%;') Title
-					th(style='width:18%;') City
-					th(style='width:17%;') Start Time
-					th(style='width:15%;') Details
-			.scroll
-				table#eventsTable
-					each event,i in events
-						- if (event.title !== null && event.city_name !== null && event.start_time !== null && event.latitude !== null && event.longitude !== null)
-							- eventsOnMap.push({lat:event.latitude, lng:event.longitude, title:event.title})
-							tr
-								td(style='width:50%;')= event.title
-								td(style='width:18%;')= event.city_name
-								td(style='width:17%;')= event.start_time
-								td(style='color:blue;cursor:pointer;text-decoration:underline;width:15%', onclick=`eventDetails(${i})`) Details and near venues
-		- else
-			table#headerTable
-				tr
-					th(style='width:50%;') Title
-					th(style='width:18%;') City
-					th(style='width:17%;') Start Time
-					th(style='width:15%;') Details
-			table#eventsTable 
-				tr
-					td(style='color:red;text-align:center;height:300px') NO AVAILABLE EVENTS!
-		.spaces1
-		.spaces1
-		footer
-			#mapContainer(style='text-align:center;')
-				#map
-			#btnStyle
-				.spaces1
-				button#back-btn(onclick="window.location.assign('/')", type='button') Back to search page
-			.spaces2
+    head
+        link(rel="shortcut icon" href="#")
+        link(rel='stylesheet', type='text/css', href='../css/country.css')
+        script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js')
+        script(src='https://code.jquery.com/ui/1.12.1/jquery-ui.js')
+        link(rel='stylesheet', href='https://unpkg.com/leaflet@1.3.4/dist/leaflet.css')
+        script(src='https://unpkg.com/leaflet@1.3.4/dist/leaflet.js')
+        link(rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous")
+        script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous")
+        meta(charset='utf-8')
+        meta(name='viewport', content='width=device-width, initial-scale=5.0')
+        title#countryNameTitle #{' '+name}
 
-		script.
-			events = !{JSON.stringify(events)};
-			function eventDetails(i) {
-				sessionStorage.eTitle = events[i].title;
-				sessionStorage.eDescription = events[i].description;
-				sessionStorage.eAddress = events[i].venue_address;
-				sessionStorage.eStartTime = events[i].start_time;
-				window.location.assign(`/country/details?lat=${events[i].latitude}&long=${events[i].longitude}`)
-			}
-		- if (eventsOnMap.length > 0) 
-			script.
-				eventsOnMap = !{JSON.stringify(eventsOnMap)};
-				$('#map').css({'height':'500px', 'width':'800px', 'display':'inline-block'});
-				let map = L.map('map').setView([90, 90], 4);
-				L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-				attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-				}).addTo(map);
-				let markerArray = [];
-				for (let i = 0; i < eventsOnMap.length; i++) {
-					let marker = L.marker([eventsOnMap[i].lat, eventsOnMap[i].lng]).addTo(map)
-						.bindPopup(eventsOnMap[i].title);
-					markerArray.push(marker);
-				}
-				var group = L.featureGroup(markerArray).addTo(map);
-				if (group.getBounds().isValid()) {
-					map.fitBounds(group.getBounds());
-				}
+        style(type='text/css').
+            html {
+                background: url(#{flag}) no-repeat center center fixed;
+                background-size: cover;
+                -webkit-background-size: cover;
+                -moz-background-size: cover;
+                -o-background-size: cover;
+            }
+    body
+        h1#countryName.mt-5 #{' '+name}
+        #main-container.mt-5.container
+            #flag-container
+                img#flag(src=flag)
+            #info-container.mt-5.text-center
+                p
+                    | Capital:
+                    span#countryCapital #{' '+capital}
+                p
+                    | Dialing Code:
+                    span#countryAlphaCode #{' '+alphaCode}
+                p
+                    | Population:
+                    span#countryPopulation #{' '+population.toLocaleString()}
+                p
+                    | Languages:
+                    span#countryLanguages 
+                        each language in languages
+                            =language.name+', '
+                p
+                    | Region:
+                    span#countryRegion #{' '+region}
+                p
+                    | Subregion:
+                    span#countrySubregion #{' '+subregion}
+        // events
+        div.container
+            - eventsOnMap = new Array;
+            .spaces1
+            - if (events && events.length > 0)
+                h1#upcomingEvents(style='text-align:left; margin: 65px;') #{'Upcoming Events: ' + events.length}
+                table.table
+                    thead#headerTable
+                        tr
+                            th Title
+                            th City
+                            th Start Time
+                            th Details
+                    tbody#eventsTable
+                        each event,i in events
+                            - if (event.title !== null && event.city_name !== null && event.start_time !== null && event.latitude !== null && event.longitude !== null)
+                                - eventsOnMap.push({lat:event.latitude, lng:event.longitude, title:event.title})
+                                tr
+                                    td= event.title
+                                    td= event.city_name
+                                    td= event.start_time
+                                    td(style='color:blue;cursor:pointer;text-decoration:underline;', onclick=`eventDetails(${i})`) Details and near venues
+            - else
+                table.table
+                    thead#headerTable
+                        tr
+                            th Title
+                            th City
+                            th Start Time
+                            th Details
+                    tbody#eventsTable 
+                        tr
+                            td(style='color:red;text-align:center;height:300px') NO AVAILABLE EVENTS!
+        .spaces1
+        .spaces1
+        footer
+            #mapContainer(style='text-align:center;')
+                #map
+            .text-center
+                .spaces1
+                button#back-btn(onclick="window.location.assign('/')", type='button') Back to search page
+            .spaces2
+
+        script.
+            events = !{JSON.stringify(events)};
+            function eventDetails(i) {
+                sessionStorage.eTitle = events[i].title;
+                sessionStorage.eDescription = events[i].description;
+                sessionStorage.eAddress = events[i].venue_address;
+                sessionStorage.eStartTime = events[i].start_time;
+                window.location.assign(`/country/details?lat=${events[i].latitude}&long=${events[i].longitude}`)
+            }
+        - if (eventsOnMap.length > 0) 
+            script.
+                eventsOnMap = !{JSON.stringify(eventsOnMap)};
+                $('#map').css({'height':'500px', 'width':'800px', 'display':'inline-block'});
+                let map = L.map('map').setView([90, 90], 4);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                }).addTo(map);
+                let markerArray = [];
+                for (let i = 0; i < eventsOnMap.length; i++) {
+                    let marker = L.marker([eventsOnMap[i].lat, eventsOnMap[i].lng]).addTo(map)
+                        .bindPopup(eventsOnMap[i].title);
+                    markerArray.push(marker);
+                }
+                var group = L.featureGroup(markerArray).addTo(map);
+                if (group.getBounds().isValid()) {
+                    map.fitBounds(group.getBounds());
+                }
 
