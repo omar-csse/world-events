@@ -88,11 +88,10 @@ html, body {
     transform: rotate(-45deg);
 }
 #mapContainer {
-    position: relative;
-    left: 20%;
-    margin: auto;
+    text-align: center;
 }
-#mapContainer #map {
+#map {
     height:500px;
     width:700px;
+    display: inline-block;
 }

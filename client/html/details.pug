@@ -1,93 +1,91 @@
 doctype html
 html
-	head
-		link(rel="shortcut icon" href="#")
-		link(rel='stylesheet', type='text/css', href='../css/details.css')
-		script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js')
-		link(rel='stylesheet', href='../js/sweet-modal/min/jquery.sweet-modal.min.css')
-		script(src='../js/sweet-modal/min/jquery.sweet-modal.min.js')
-		link(rel='stylesheet', href='https://unpkg.com/leaflet@1.3.4/dist/leaflet.css')
-		script(src='https://unpkg.com/leaflet@1.3.4/dist/leaflet.js')
-		meta(charset='utf-8')
-		meta(name='viewport', content='width=device-width, initial-scale=5.0')
-		title event details
-	body
-		#wrapper
-			a.close(href='javascript:history.back()')
-			.spaces2
-			h1#eventTitle
-			script.
-				$(`#eventTitle`).append(sessionStorage.eTitle);
-			.line
-			p#eventDescreption(style='text-align:justify;')
-				strong Description: 
-			script.
-				$(`#eventDescreption`).append(sessionStorage.eDescription);
-			p#eventAddress(style='text-align:justify;')
-				strong Address: 
-			script.
-				$(`#eventAddress`).append(sessionStorage.eAddres);
-			p#eventTime(style='text-align:justify;')
-				strong Start Time: 
-			script.
-				$(`#eventTime`).append(sessionStorage.eStartTime);
-			// venues
-			.spaces2
-			h1#nearVenuesNum(style='margin: 0 65px;') Near venues: 
-			br
-			br
-			- venuesOnMap = new Array;
-			#tableWrapper
-				table#venuesHeaderTable
-					tr
-						th(style='width:50%;') Venue
-						th(style='width:20%;') Distance from event (km)
-						th(style='width:20%;') Category
-						th(style='width:10%;') Address
-				.scroll
-					table#venuesDataTable
-						each venue, i in venues
-							- if (venue.name !== null && venue.category !== null && venue.address !== null && venue.latitude !== null && venue.longitude !== null)
-								- venuesOnMap.push({lat:venue.latitude, lng:venue.longitude, name:venue.name})
-								tr
-									td(style='width:50%;')= venue.name
-									td(style='width:20%;')= venue.distance/1000
-									td(style='width:20%;')= venue.category
-									td(style='width:10%;color:blue;cursor:pointer;text-decoration:underline;width:15%', onclick=`venueAddress(${i})`) Address
-				- if (venuesOnMap.length <= 0) 
-					table#venuesDataTable
-						tr
-							td(style='color:red;text-align:center;height:300px') NO AVAILABLE VENUES!
-		footer
-			.spaces1
-			.spaces2
-			#mContainer(style='text-align:center;')
-				#map
-			.spaces2
+    head
+        link(rel="shortcut icon" href="#")
+        link(rel='stylesheet', type='text/css', href='../css/details.css')
+        script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js')
+        link(rel='stylesheet', href='../js/sweet-modal/min/jquery.sweet-modal.min.css')
+        script(src='../js/sweet-modal/min/jquery.sweet-modal.min.js')
+        link(rel='stylesheet', href='https://unpkg.com/leaflet@1.3.4/dist/leaflet.css')
+        script(src='https://unpkg.com/leaflet@1.3.4/dist/leaflet.js')
+        meta(charset='utf-8')
+        meta(name='viewport', content='width=device-width, initial-scale=5.0')
+        title event details
+    body
+        a.close(href='javascript:history.back()')
+        .spaces2
+        h1#eventTitle
+        script.
+            $(`#eventTitle`).append(sessionStorage.eTitle);
+        .line
+        p#eventDescreption(style='text-align:justify;')
+            strong Description: 
+        script.
+            $(`#eventDescreption`).append(sessionStorage.eDescription);
+        p#eventAddress(style='text-align:justify;')
+            strong Address: 
+        script.
+            $(`#eventAddress`).append(sessionStorage.eAddres);
+        p#eventTime(style='text-align:justify;')
+            strong Start Time: 
+        script.
+            $(`#eventTime`).append(sessionStorage.eStartTime);
+        // venues
+        .spaces2
+        h1#nearVenuesNum(style='margin: 0 65px;') Near venues: 
+        br
+        br
+        - venuesOnMap = new Array;
+        #tableWrapper
+            .scroll
+                table#venuesDataTable
+                    tr#venuesHeaderTable
+                        th Venue
+                        th Distance from event (km)
+                        th Category
+                        th Address
 
-		- if (venuesOnMap.length > 0)
-			script.
-				venues = !{JSON.stringify(venues)};
-				function venueAddress(i) {
-					$.sweetModal({
-						title: (`<h1 style="text-align:left">${venues[i].name}</h1>`),
-						content: `<h2>address:</h2><p>${venues[i].address}<p>`
-					});
-				}
-			script.
-				venuesOnMap = !{JSON.stringify(venuesOnMap)};
-				$('#map').css({'height':'500px', 'width':'700px', 'display':'inline-block'});
-				let map = L.map('map').setView([90, 90], 4);
-				L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-				attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-				}).addTo(map);
-				let markerArray = [];
-				for (let i = 0; i < venuesOnMap.length; i++) {
-					let marker = L.marker([venuesOnMap[i].lat, venuesOnMap[i].lng]).addTo(map)
-						.bindPopup(venuesOnMap[i].name);
-					markerArray.push(marker);
-				}
-				var group = L.featureGroup(markerArray).addTo(map);
-				if (group.getBounds().isValid()) {
-					map.fitBounds(group.getBounds());
-				}
+                    each venue, i in venues
+                        - if (venue.name !== null && venue.category !== null && venue.address !== null && venue.latitude !== null && venue.longitude !== null)
+                            - venuesOnMap.push({lat:venue.latitude, lng:venue.longitude, name:venue.name})
+                            tr
+                                td= venue.name
+                                td= venue.distance/1000
+                                td= venue.category
+                                td(style='width:10%;color:blue;cursor:pointer;text-decoration:underline;', onclick=`venueAddress(${i})`) Address
+            - if (venuesOnMap.length <= 0) 
+                table#venuesDataTable
+                    tr
+                        td(style='color:red;text-align:center;height:300px') NO AVAILABLE VENUES!
+        footer
+            .spaces1
+            .spaces2
+            #mapContainer
+                #map
+            .spaces2
+
+        - if (venuesOnMap.length > 0)
+            script.
+                venues = !{JSON.stringify(venues)};
+                function venueAddress(i) {
+                    $.sweetModal({
+                        title: (`<h1 style="text-align:left">${venues[i].name}</h1>`),
+                        content: `<h2>address:</h2><p>${venues[i].address}<p>`
+                    });
+                }
+            script.
+                venuesOnMap = !{JSON.stringify(venuesOnMap)};
+                let map = L.map('map').setView([90, 90], 4);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                }).addTo(map);
+                let markerArray = [];
+                for (let i = 0; i < venuesOnMap.length; i++) {
+                    let marker = L.marker([venuesOnMap[i].lat, venuesOnMap[i].lng]).addTo(map)
+                        .bindPopup(venuesOnMap[i].name);
+                    markerArray.push(marker);
+                }
+                var group = L.featureGroup(markerArray).addTo(map);
+                if (group.getBounds().isValid()) {
+                    map.fitBounds(group.getBounds());
+                }
