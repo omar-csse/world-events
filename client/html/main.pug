@@ -1,27 +1,28 @@
 doctype html
 html(lang="en")
-	head
+    head
 
-		link(rel="shortcut icon" href="#")
-		link(href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.css', media='screen', rel='stylesheet', type='text/css')
-		script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js')
-		script(src='https://code.jquery.com/ui/1.12.1/jquery-ui.js')
-		link(href='https://cdnjs.cloudflare.com/ajax/libs/jqvmap/1.5.1/jqvmap.css', media='screen', rel='stylesheet', type='text/css')
-		script(src='https://cdnjs.cloudflare.com/ajax/libs/jqvmap/1.5.1/jquery.vmap.js')
-		script(src='https://cdnjs.cloudflare.com/ajax/libs/jqvmap/1.5.1/maps/jquery.vmap.world.js')
-		link(rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous")
-		script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous")
-		script(src='../js/jquery.vmap.sampledata.js')
-		script(src='../js/worldMap.js')
-		script(src='../js/main.js')
-		meta(charset='utf-8')
-		title Home | World Map
-	body
-		div.container.mt-3
-			form.form-inline.justify-content-center
-				input#search-box(style="background:#eee;", class="form-control mb-2 mr-sm-2 mb-sm-0", size='50', type='text', placeholder='Type the full name of country or the or the country code (##)')
-				button#search-btn(style="background:hsl(0, 93%, 24%);color:white;", class="form-control mb-2 mr-sm-2 mb-sm-0 btn", type='button' onclick='searchBtnClicked();') Search
-				select#select-menu(style="background:hsl(0, 93%, 24%);color:white;", class="form-control mb-2 mr-sm-2 mb-sm-0 btn", onchange='getSelectedOption(this);')
-					option#1(value='1', selected) Country
-					option#2(value='2') Query
-			#vmap(style="top:100px;height:100vh;")
+        link(rel="shortcut icon" href="#")
+        link(href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.css', media='screen', rel='stylesheet', type='text/css')
+        script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js')
+        script(src='https://code.jquery.com/ui/1.12.1/jquery-ui.js')
+        link(href='https://cdnjs.cloudflare.com/ajax/libs/jqvmap/1.5.1/jqvmap.css', media='screen', rel='stylesheet', type='text/css')
+        script(src='https://cdnjs.cloudflare.com/ajax/libs/jqvmap/1.5.1/jquery.vmap.js')
+        script(src='https://cdnjs.cloudflare.com/ajax/libs/jqvmap/1.5.1/maps/jquery.vmap.world.js')
+        link(rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous")
+        script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous")
+        script(src='../js/jquery.vmap.sampledata.js')
+        script(src='../js/worldMap.js')
+        script(src='../js/main.js')
+        meta(charset='utf-8')
+        meta(name="viewport" content="width=device-width, initial-scale=1.0")
+        title Home | World Map
+    body
+        div.container.mt-3
+            form.form-inline.justify-content-center
+                input#search-box(style="background:#eee;", class="form-control mb-2 mr-sm-2 mb-sm-0", size='50', type='text', placeholder='Type the full name of country or the or the country code (##)')
+                button#search-btn(style="background:hsl(0, 93%, 24%);color:white;", class="form-control mb-2 mr-sm-2 mb-sm-0 btn", type='button' onclick='searchBtnClicked();') Search
+                select#select-menu(style="background:hsl(0, 93%, 24%);color:white;", class="form-control mb-2 mr-sm-2 mb-sm-0 btn", onchange='getSelectedOption(this);')
+                    option#1(value='1', selected) Country
+                    option#2(value='2') Query
+            #vmap(style="top:100px;height:100vh;")
