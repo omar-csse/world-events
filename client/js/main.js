@@ -9,7 +9,6 @@ function getData() {
     fetch('/api/countries')
         .then (resp => resp.json())
         .then((data) => {
-            console.log('data')
             let countryName = [];
             let countryAlpha2Code = [];
             let countryAlpha3Code = [];
