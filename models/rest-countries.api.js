@@ -1,6 +1,7 @@
-const RestCountries = require('rest-countries-node');
-restCountries = new RestCountries;
+const fetch = require('node-fetch');
 
-module.exports.initCountriesAPI = () => {
-    return restCountries.getAll().then(data => module.exports.countries = data)
+module.exports.initCountriesAPI = async () => {
+    return await fetch('https://restcountries.eu/rest/v2/all')
+        .then(response => response.json())
+        .then(data => module.exports.countries = data)
 }

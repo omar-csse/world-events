@@ -5,30 +5,34 @@
     the autocomplete ui.
 */
 
-$.ajax({
-    type: 'GET',
-    url: '/api/countries',
-    contentType: 'application/json',
-    success: (countries) => {
-        let countryName = [];
-        let countryAlpha2Code = [];
-        let countryAlpha3Code = [];
-        for (let country in countries) {
-            countryName.push(countries[country].name);
-            countryAlpha2Code.push(countries[country].alpha2Code);
-            countryAlpha3Code.push(countries[country].alpha3Code);
-        }
-        sessionStorage.setItem('countryName', JSON.stringify(countryName));
-        sessionStorage.setItem('countryAlpha2Code', JSON.stringify(countryAlpha2Code));
-        sessionStorage.setItem('countryAlpha3Code', JSON.stringify(countryAlpha3Code));
-    }
-}).done(() => {
-    let countryName = JSON.parse(sessionStorage.getItem('countryName'));
-    $('#search-box').autocomplete({
-        source: countryName,
-        minLength: 1,
-    });
-});
+function getData() {
+    fetch('/api/countries')
+        .then (resp => resp.json())
+        .then((data) => {
+            console.log('data')
+            let countryName = [];
+            let countryAlpha2Code = [];
+            let countryAlpha3Code = [];
+            for (let i = 0; i < data.length; i++) {
+                countryName.push(data[i].name);
+                countryAlpha2Code.push(data[i].alpha2Code);
+                countryAlpha3Code.push(data[i].alpha3Code);
+            }
+            sessionStorage.setItem('countryName', JSON.stringify(countryName));
+            sessionStorage.setItem('countryAlpha2Code', JSON.stringify(countryAlpha2Code));
+            sessionStorage.setItem('countryAlpha3Code', JSON.stringify(countryAlpha3Code));
+        })
+        .finally(() => {
+            let countryName = JSON.parse(sessionStorage.getItem('countryName'));
+            $('#search-box').autocomplete({
+                source: countryName,
+                minLength: 1,
+            });
+        })
+        .catch(err => console.log(err))
+}
+
+getData();
 
 const toTitleCase = (phrase) => {
     return phrase

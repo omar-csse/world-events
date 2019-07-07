@@ -59,8 +59,8 @@ app.use((err, req, res, next) => {
 */
 
 const main = async () => {
-    await app.listen(port);
     await countries.initCountriesAPI();
+    await app.listen(port);
     await console.log('countries api is ready!');
     return console.debug(`🚀  Server listening on http://${localhost}:${port}`);
 }
