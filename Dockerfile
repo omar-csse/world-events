@@ -4,5 +4,5 @@ WORKDIR /app
 COPY ./package*.json ./
 RUN npm install --only=production
 COPY . /app
-EXPOSE 8108
+EXPOSE 3010
 CMD node ./server/app.js
