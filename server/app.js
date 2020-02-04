@@ -4,7 +4,7 @@
     the express static built-in function.
 */
 
-require('dotenv').config();
+const dotenv = require('dotenv');
 const path = require('path');
 const express = require('express');
 const app = express();
@@ -59,6 +59,7 @@ app.use((err, req, res, next) => {
 */
 
 const main = async () => {
+    await dotenv.config();
     await countries.initCountriesAPI();
     await app.listen(port);
     await console.log('countries api is ready!');
