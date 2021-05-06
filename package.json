@@ -16,7 +16,7 @@
         "morgan": "^1.9.1",
         "node-fetch": "^2.6.0",
         "pug": "^2.0.4",
-        "underscore": "^1.9.2"
+        "underscore": "^1.12.1"
     },
     "devDependencies": {
         "dotenv": "^8.2.0"
